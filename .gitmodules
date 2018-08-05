@@ -1,0 +1,3 @@
+[submodule "PureMVC sample"]
+	path = PureMVC sample
+	url = ../../mokhovm/PureMVC-sample.git
