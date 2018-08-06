@@ -81,12 +81,5 @@ namespace SampleGameNamespace
             tglHard.onValueChanged.RemoveAllListeners();
         }
 
-        protected override string calcEscState()
-        {
-            return _prScene.prevState;
-        }
-
-
-
     }
 }

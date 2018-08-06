@@ -108,7 +108,7 @@ namespace SampleGameNamespace
             if (health > MAX_HEALTH) health = MAX_HEALTH;
             if (health < MIN_HEALTH) health = MIN_HEALTH;
             MyGameFacade.Instance.SendNotification(BzMessages.HEALTH_CHANGED, health);
-            if (health < 0) MyGameFacade.Instance.SendNotification(BzMessages.AVATAR_DEAD, this);
+            if (health <= 0) MyGameFacade.Instance.SendNotification(BzMessages.AVATAR_DEAD, this);
         }
 
         /// <summary>

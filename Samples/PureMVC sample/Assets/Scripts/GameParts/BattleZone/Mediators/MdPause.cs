@@ -27,30 +27,31 @@ namespace SampleGameNamespace
         public override void OnRegister()
         {
             base.OnRegister();
+            triggerState = BzMessages.STATE_PAUSE;
+            escState = BzMessages.STATE_IN_PROGRESS;
             /*
-            triggerState = MyMessages.STATE_PAUSE;
-            escState = MyMessages.STATE_GAME;
-
             btnResume = Tools.FindObjectByName("btnResume").GetComponent<Button>();
             btnResume.onClick.AddListener(() =>
-                MyGameFacade.Instance.SendNotification(MyMessages.NOTE_STATE_SWITCH, null, MyMessages.STATE_GAME));
+                MyGameFacade.Instance.SendNotification(BzMessages.STATE_CHANGE, null, BzMessages.STATE_IN_PROGRESS));
 
             btnSettings = Tools.FindObjectByName("btnSettings2").GetComponent<Button>();
             btnSettings.onClick.AddListener(() =>
-                MyGameFacade.Instance.SendNotification(MyMessages.NOTE_STATE_SWITCH, null, MyMessages.STATE_SETTINGS));
+                MyGameFacade.Instance.SendNotification(BzMessages.STATE_CHANGE, null, BzMessages.STATE_END));
 
             btnQuitGame2 = Tools.FindObjectByName("btnQuitGame2").GetComponent<Button>();
             btnQuitGame2.onClick.AddListener(() =>
-                MyGameFacade.Instance.SendNotification(MyMessages.NOTE_STATE_SWITCH, null, MyMessages.STATE_MAIN_MENU));
-                */
+                MyGameFacade.Instance.SendNotification(BzMessages.STATE_CHANGE, null, BzMessages.STATE_END));
+            */
         }
 
         public override void OnRemove()
         {
             base.OnRemove();
+            /*
             btnResume.onClick.RemoveAllListeners();
             btnSettings.onClick.RemoveAllListeners();
             btnQuitGame2.onClick.RemoveAllListeners();
+            */
         }
        
     }

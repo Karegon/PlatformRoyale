@@ -90,11 +90,7 @@ namespace SampleGameNamespace
         private void sceneLoadComplete()
         {
             Debug.Log("Loading complete " + _currentScene);
-            bool copmplete = SceneManager.SetActiveScene(SceneManager.GetSceneByName(_currentScene));
-            Debug.Log("Set active scene is correct:" + copmplete);
-            Debug.Log("Setting active scene " + SceneManager.GetActiveScene().name);
-            var data = findSceneData(_currentScene);
-            if (data != null) SendNotification(data.startupCommand);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(_currentScene));
         }
 
         /// <summary>
@@ -120,6 +116,7 @@ namespace SampleGameNamespace
         {
             base.OnRegister();
             Debug.Log("OnRegister " + NAME);
+            SceneManager.activeSceneChanged += SceneChanged;
             initRoute();
         }
 
@@ -127,6 +124,15 @@ namespace SampleGameNamespace
         {
             base.OnRemove();
             Debug.Log("OnRemove " + NAME);
+            SceneManager.activeSceneChanged -= SceneChanged;
+        }
+
+        protected virtual void SceneChanged(Scene current, Scene next)
+        {
+            Debug.Log("SceneChanged " + current.name + ">" + next.name);
+            Debug.Log("Setting active scene " + SceneManager.GetActiveScene().name);
+            var data = findSceneData(next.name);
+            if (data != null) SendNotification(data.startupCommand);
         }
 
         /// <summary>
@@ -134,9 +140,12 @@ namespace SampleGameNamespace
         /// </summary>
         private void initRoute()
         {
-            var sceneName = SceneManager.GetActiveScene().name;
+            Debug.Log("initRoute");
+            /*
+           var sceneName = SceneManager.GetActiveScene().name;
             var data = findSceneData(sceneName);
             if (data != null) SendNotification(data.startupCommand);
+            */
         }
 
 
@@ -147,6 +156,7 @@ namespace SampleGameNamespace
         {
             IList<string> notes = new System.Collections.Generic.List<string>();
             notes.Add(MenuMessages.NOTE_STATE_SWITCH);
+            notes.Add(BaseMessages.NOTE_SCENE_PREPARE);
             return notes;
         }
 
@@ -166,6 +176,9 @@ namespace SampleGameNamespace
                     {
                         currentScene = "Level1";
                     }
+                    break;
+                case BaseMessages.NOTE_SCENE_PREPARE:
+                    initRoute();
                     break;
             }
         }

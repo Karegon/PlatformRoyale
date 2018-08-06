@@ -19,7 +19,7 @@ namespace SampleGameNamespace
     /// - медиаторы предметов
     /// - медиатор уровня?
     /// </summary>
-    public class MdBattleZone : SceneMediator
+    public class MdBattleZone : Mediator
     {
 
         public new const string NAME = "MdBattleZone";
@@ -33,25 +33,19 @@ namespace SampleGameNamespace
         private GameObject pauseForm;
         private GameObject settingsForm;
     
-        public MdBattleZone(Bootstrap view) : base(NAME, view)
+        public MdBattleZone() : base(NAME)
         {
 
         }
 
-        protected override void init()
+        public override void OnRegister()
         {
-            Debug.Log("init objects");
+            Debug.Log("OnRegister " + NAME);
             _prBattleZone = Facade.RetrieveProxy(PrBattleZone.NAME) as PrBattleZone;
 
             hero = Tools.FindObjectByName("Hero");
             pauseForm = Tools.FindObjectByName("PauseForm");
             //settingsForm = Tools.FindObjectByName("SettingsForm");
-
-        }
-
-        protected override void onStartScene()
-        {
-            base.onStartScene();
 
             MdPlayerInput mdPlayerInput = UnityEngine.Object.FindObjectOfType<MdPlayerInput>();
             MdHud mdHud = UnityEngine.Object.FindObjectOfType<MdHud>();
@@ -75,7 +69,8 @@ namespace SampleGameNamespace
         public override void OnRemove()
         {
             base.OnRemove();
-           // Facade.RemoveMediator(MdSettings.NAME);
+            Debug.Log("OnRemove " + NAME);
+            // Facade.RemoveMediator(MdSettings.NAME);
             Facade.RemoveMediator(MdPause.NAME);
             Facade.RemoveMediator(MdSound.NAME);
             Facade.RemoveMediator(MdPlayerInput.NAME);
@@ -84,17 +79,12 @@ namespace SampleGameNamespace
             Facade.RemoveMediator(MdWeapon.NAME);
         }
 
-        protected override void onUpdateScene()
-        {
-            base.onUpdateScene();
-            //_prGame.sceneUpdate();
-        }
-
         public override IList<string> ListNotificationInterests()
         {
             IList<string> notes = new System.Collections.Generic.List<string>();
             notes.Add(BzMessages.STATE_CHANGE);
             notes.Add(BzMessages.STATE_WAS_CHANGED);
+            notes.Add(BzMessages.AVATAR_DEAD);
             return notes;
         }
 
@@ -106,8 +96,11 @@ namespace SampleGameNamespace
                     _prBattleZone.setStateByMessage(note.Type);
                     break;
                 case BzMessages.STATE_WAS_CHANGED:
-                    
                     break;
+                case BzMessages.AVATAR_DEAD:
+                    SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, MenuMessages.STATE_MAIN_MENU);
+                    break;
+
 
             }
         }

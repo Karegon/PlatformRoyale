@@ -15,20 +15,9 @@ namespace SampleGameNamespace
         public override void Execute(INotification notification)
         {
             Debug.Log("execute CmdMenuStartup");
-            registerProxies();
-            registerMediators(notification);
-        }
-
-        private void registerProxies()
-        {
             Facade.RegisterProxy(new PrMenuScene());
+            Facade.RegisterMediator(new MdMenuScene());
         }
 
-        private void registerMediators(INotification note)
-        {
-            Bootstrap data = UnityEngine.Object.FindObjectOfType<Bootstrap>() as Bootstrap;
-            Facade.RegisterMediator(new MdMenuScene(data));
-
-        }
     }
 }

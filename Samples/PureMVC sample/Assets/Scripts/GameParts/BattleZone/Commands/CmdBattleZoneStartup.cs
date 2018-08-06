@@ -23,12 +23,6 @@ namespace SampleGameNamespace
         {
             Debug.Log("execute CmdBattleZoneInit");
 
-            // регистрируем боевую зону и медиатор к ней
-            PrBattleZone zone = new PrBattleZone();
-            Facade.RegisterProxy(zone);
-            Bootstrap data = UnityEngine.Object.FindObjectOfType<Bootstrap>() as Bootstrap;
-            Facade.RegisterMediator(new MdBattleZone(data));
-
             SendNotification(BzMessages.STATE_INIT);
 
             // нужно создать на сцене необходимые игровые элементы, которые по умолчанию не создаются 
@@ -44,6 +38,11 @@ namespace SampleGameNamespace
             // персонаж
             Tools.instantiateObject(PLAYER_HERO);
             Debug.Log(PLAYER_HERO + " created");
+
+            // регистрируем боевую зону и медиатор к ней
+            Facade.RegisterProxy(new PrBattleZone());
+            //Bootstrap data = UnityEngine.Object.FindObjectOfType<Bootstrap>() as Bootstrap;
+            Facade.RegisterMediator(new MdBattleZone());
 
         }
 

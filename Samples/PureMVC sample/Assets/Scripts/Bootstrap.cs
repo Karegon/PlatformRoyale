@@ -20,7 +20,17 @@ namespace SampleGameNamespace
         {
             base.initNewBootstrap();
             MyGameFacade facade = MyGameFacade.Instance;
-            facade.Startup(this);
+            facade.startup(this);
+        }
+
+        /// <summary>
+        /// Инициализируем новый загрузчик PMVC
+        /// </summary>
+        protected override void resumeBootstrap()
+        {
+            base.resumeBootstrap();
+            MyGameFacade facade = MyGameFacade.Instance;
+            facade.resume();
         }
     }
 }

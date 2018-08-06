@@ -16,11 +16,12 @@ namespace PureMVC.Unity
     /// </summary>
     public abstract class CustomBootstrap : MonoBehaviour
     {
+        /*
         public event UnityAction onStart;
         public event UnityAction onUpdate;
         public event UnityAction onFixedUpdate;
         public event UnityAction<Scene, Scene> onSceneChanged;
-
+        */
 
         /// <summary>
         /// Проверяет, нет ли на сцене ещё одного загрузчика (который был добавлен ранее и приехал
@@ -28,7 +29,7 @@ namespace PureMVC.Unity
         /// </summary>
         protected virtual void Awake()
         {
-            SceneManager.activeSceneChanged += SceneChanged;
+            //SceneManager.activeSceneChanged += SceneChanged;
             Debug.Log("bootstrap awake " + getFullName());
             // загрузчик стратрует фасад и всю обвязку PMVC, только если он ещё не был инициализирован
             if (!Facade.hasInstance())
@@ -37,6 +38,7 @@ namespace PureMVC.Unity
             }
             else
             {
+                resumeBootstrap();
                 // а если фасад уже есть, значит его инициализировал загрузчик с другой сцены.
                 // В этом случае эту инстранцию объекта следует уничтожить от греха подальше
                 //Object.Destroy(this.gameObject);
@@ -47,11 +49,24 @@ namespace PureMVC.Unity
         /// Должен быть переопределен в потомках как точка входа программы. 
         /// Используется для инициализации фасада
         /// </summary>
+        protected virtual void resumeBootstrap()
+        {
+            Debug.Log("resumeBootstrap");
+        }
+
+        /// <summary>                                                                                                   
+        /// Должен быть переопределен в потомках как точка входа программы. 
+        /// Используется для инициализации фасада
+        /// </summary>
         protected virtual void initNewBootstrap()
         {
+            Debug.Log("initNewBootstrap");
             DontDestroyOnLoad(gameObject);
         }
 
+        
+
+        /*
         protected virtual void Start()
         {
             Debug.Log("bootstrap start " + getFullName());
@@ -72,6 +87,7 @@ namespace PureMVC.Unity
         {
             if (onFixedUpdate != null) onFixedUpdate();
         }
+        */
 
         private string getFullName()
         {

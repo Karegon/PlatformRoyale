@@ -22,6 +22,7 @@ namespace SampleGameNamespace
             Debug.Log("Creating App Facade");
         }
 
+        // переопределим проперть, чтобы возвращала инстанцию нужного типа
         public new static MyGameFacade Instance
         {
             get
@@ -45,10 +46,22 @@ namespace SampleGameNamespace
             return (Instance as MyGameFacade).bootstrap.gameObject;
         }
 
-        public void Startup(Bootstrap bootstrap)
+        /// <summary>
+        /// Старт фрейморка 
+        /// </summary>
+        /// <param name="bootstrap">загрузчик, который останется на всех сценах (DontDestroyOnLoad) </param>
+        public void startup(Bootstrap bootstrap)
         {
             this.bootstrap = bootstrap;
             SendNotification(BaseMessages.CMD_LOADER_STARTUP, bootstrap);
+        }
+
+        /// <summary>
+        /// повторный запуск фреймворка при загрузке новой сцены
+        /// </summary>
+        public void resume()
+        {
+            //SendNotification(BaseMessages.NOTE_SCENE_PREPARE);
         }
 
         protected override void InitializeFacade()

@@ -11,7 +11,7 @@ namespace SampleGameNamespace
     /*
      * Медиатор сцены
      */ 
-    public class MdMenuScene : SceneMediator
+    public class MdMenuScene : Mediator
     {
         public new const string NAME = "MdMenuScene";
 
@@ -22,45 +22,35 @@ namespace SampleGameNamespace
         private GameObject settings;
         private GameObject mainMenu;
 
-        public MdMenuScene(Bootstrap view) : base(NAME, view)
+        public MdMenuScene() : base(NAME, null)
         {
-
         }
 
-        protected override void init()
+        public override void OnRegister()
         {
-            Debug.Log("init objects");
+            base.OnRegister();
+            Debug.Log("OnRegister " + NAME);
             _prScene = Facade.RetrieveProxy(PrMenuScene.NAME) as PrMenuScene;
 
             mainMenu = Tools.FindObjectByName("MainMenu");
             settings = Tools.FindObjectByName("Settings");
 
-        }
-
-        protected override void onStartScene()
-        {
-            base.onStartScene();
-            _prScene.sceneStart();
             Facade.RegisterMediator(new MdMenu(mainMenu));
             Facade.RegisterMediator(new MdSettings(settings));
             Facade.RegisterMediator(new MdSound());
 
             // включаем главное меню
-            SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, MenuMessages.STATE_MAIN_MENU);
+            // SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, MenuMessages.STATE_MAIN_MENU);
         }
+        
 
         public override void OnRemove()
         {
             base.OnRemove();
+            Debug.Log("OnRemove " + NAME);
             Facade.RemoveMediator(MdMenu.NAME);
             Facade.RemoveMediator(MdSettings.NAME);
             Facade.RemoveMediator(MdSound.NAME);
-        }
-
-        protected override void onUpdateScene()
-        {
-            base.onUpdateScene();
-            if (_prScene != null) _prScene.sceneUpdate();
         }
 
         public override IList<string> ListNotificationInterests()
@@ -80,7 +70,6 @@ namespace SampleGameNamespace
                     break;
                 case MenuMessages.NOTE_STATE_SWITCH:
                     Debug.Log("STATE_SWITCH " + note.Type);
-                    _prScene.curState = note.Type;
                     switch (note.Type)
                     {
                         case MenuMessages.STATE_QUIT:

@@ -22,5 +22,13 @@ namespace SampleGameNamespace
         public const string CMD_LOADER_SHUTDOWN = APP_PREFIX + "note/loader/shutdown";
         // показать стандартную сцену игры (запускается после лоадера)
         public const string CMD_SHOW_DEFALUT_SCENE = APP_PREFIX + "note/showDefaultScene";
+
+        // сообщение для контроллера сцены о переключени на другую сцену
+        public const string NOTE_SCENE_PREPARE = APP_PREFIX + "note/scenePrepare";
+        // сообщение о том, что контроллер сцены загрузил сцену
+        public const string NOTE_SCENE_LOADED = APP_PREFIX + "note/SceneLoaded";
+
+
+
     }
 }

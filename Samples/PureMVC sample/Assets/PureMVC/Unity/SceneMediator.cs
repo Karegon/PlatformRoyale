@@ -17,9 +17,11 @@ namespace PureMVC.Unity
         public SceneMediator(string mediatorName, CustomBootstrap viewComponent) : base (mediatorName, viewComponent)
         {
             Debug.Log(mediatorName + " started");
+            /*
             viewComponent.onStart += onStartScene;
             viewComponent.onUpdate += onUpdateScene;
             viewComponent.onSceneChanged += onSceneChanged;
+            */
         }
 
 

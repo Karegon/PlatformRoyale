@@ -13,13 +13,8 @@ namespace SampleGameNamespace
         protected string triggerState;
         private string _escState;
         protected string escState {
-            get { return calcEscState(); }
+            get { return _escState; }
             set { _escState = value; }
-        }
-
-        protected virtual string calcEscState()
-        {
-            return _escState;
         }
 
         protected PrMenuScene _prScene;

@@ -23,32 +23,11 @@ namespace SampleGameNamespace
         // сложность игры
         public Difficulty difficulty;
 
-        // предыдущее состояние машины
-        public string prevState;
-        // текущее состояние машины
-        private string _curState;
-        public string curState {
-            get { return _curState; }
-            set
-            {
-                prevState = _curState;
-                _curState = value;
-            }
-        }
-
         public AudioSettings audioSettings = new AudioSettings();
 
         public PrMenuScene() : base (NAME, null)
         {
             Debug.Log(NAME + " started");
-        }
-
-        public void sceneStart()
-        {
-        }
-
-        public void sceneUpdate()
-        {
         }
 
     }
