@@ -32,15 +32,18 @@ namespace SampleGameNamespace
             Debug.Log("OnRegister " + NAME);
             _prScene = Facade.RetrieveProxy(PrMenuScene.NAME) as PrMenuScene;
 
+
+            Transform canvas = Tools.FindObjectByName(MyResources.DEF_CANVAS_NAME).transform;
+            // меню настроек
+            var settings = Tools.instantiateObject(MyResources.FROM_SETTINGS, canvas);
+            settings.SetActive(false);
+            Debug.Log(MyResources.FROM_SETTINGS + " created");
+
             mainMenu = Tools.FindObjectByName("MainMenu");
-            settings = Tools.FindObjectByName("Settings");
 
             Facade.RegisterMediator(new MdMenu(mainMenu));
             Facade.RegisterMediator(new MdSettings(settings));
             Facade.RegisterMediator(new MdSound());
-
-            // включаем главное меню
-            // SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, MenuMessages.STATE_MAIN_MENU);
         }
         
 
@@ -56,7 +59,6 @@ namespace SampleGameNamespace
         public override IList<string> ListNotificationInterests()
         {
             IList<string> notes = new System.Collections.Generic.List<string>();
-            notes.Add(MenuMessages.NOTE_STATE_SWITCH);
             notes.Add(MenuMessages.NOTE_SETTINGS_LEVEL);
             return notes;
         }
@@ -67,20 +69,6 @@ namespace SampleGameNamespace
                 case MenuMessages.NOTE_SETTINGS_LEVEL:
                     _prScene.difficulty = (Difficulty) note.Body;
                     Debug.Log("NOTE_SETTINGS_LEVEL " + _prScene.difficulty);
-                    break;
-                case MenuMessages.NOTE_STATE_SWITCH:
-                    Debug.Log("STATE_SWITCH " + note.Type);
-                    switch (note.Type)
-                    {
-                        case MenuMessages.STATE_QUIT:
-                            #if UNITY_EDITOR
-                                // Application.Quit() не работает в редакторе 
-                                UnityEditor.EditorApplication.isPlaying = false;
-                            #else
-                                Application.Quit();
-                            #endif
-                            break;
-                    }
                     break;
             }
         }

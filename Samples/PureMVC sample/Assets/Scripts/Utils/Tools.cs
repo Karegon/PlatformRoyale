@@ -8,6 +8,8 @@ namespace SampleGameNamespace
      */ 
     class Tools
     {
+        private const string CLONE_SUFFIX = "(Clone)";
+
         /// <summary>
         /// Вернет тру, если в игре установленапауза 
         /// </summary>
@@ -17,14 +19,15 @@ namespace SampleGameNamespace
             return Time.timeScale == 0;
         }
 
-        public static GameObject FindObjectByName(string name)
+        public static GameObject FindObjectByName(string name, bool isClone = false)
         {
+            string fullName = isClone ? name + CLONE_SUFFIX : name;
             Transform[] objs = Resources.FindObjectsOfTypeAll<Transform>() as Transform[];
             for (int i = 0; i < objs.Length; i++)
             {
                 if (objs[i].hideFlags == HideFlags.None)
                 {
-                    if (objs[i].name == name)
+                    if (objs[i].name == fullName)
                     {
                         return objs[i].gameObject;
                     }

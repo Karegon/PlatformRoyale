@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Common;
 using PureMVC.Interfaces;
 using PureMVC.Patterns;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace SampleGameNamespace
         {
             Debug.Log("execute CmdLoaderShutdown");
             Facade.RemoveMediator(MdSceneController.NAME);
+            Facade.RemoveMediator(MdLogHandler.NAME);
         }
 
     }

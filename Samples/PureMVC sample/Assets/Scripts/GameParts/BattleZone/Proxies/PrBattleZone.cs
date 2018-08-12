@@ -14,6 +14,7 @@ namespace SampleGameNamespace
         zsInit,
         zsInProgress,
         zsPause,
+        zsSettings,
         zsEnd
     }
 
@@ -61,6 +62,10 @@ namespace SampleGameNamespace
                 // игра остановлена
                 case BzMessages.STATE_PAUSE:
                     res = ZoneState.zsPause;
+                    break;
+                // открыты настройки игры
+                case BzMessages.STATE_SETTINGS:
+                    res = ZoneState.zsSettings;
                     break;
                 // игра окончена
                 case BzMessages.STATE_END:

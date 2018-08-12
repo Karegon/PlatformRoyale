@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using PureMVC.Interfaces;
 using PureMVC.Patterns;
@@ -52,8 +53,15 @@ namespace SampleGameNamespace
         /// <param name="bootstrap">загрузчик, который останется на всех сценах (DontDestroyOnLoad) </param>
         public void startup(Bootstrap bootstrap)
         {
+            Application.quitting += onQuitting;
             this.bootstrap = bootstrap;
-            SendNotification(BaseMessages.CMD_LOADER_STARTUP, bootstrap);
+            SendNotification(BaseMessages.CMD_GAME_STARTUP, bootstrap);
+        }
+
+        private void onQuitting()
+        {
+            SendNotification(BaseMessages.NOTE_APP_QUIT);
+            SendNotification(BaseMessages.CMD_GAME_SHUTDOWN);
         }
 
         /// <summary>
@@ -77,9 +85,8 @@ namespace SampleGameNamespace
         protected override void InitializeController()
         {
             base.InitializeController();
-            RegisterCommand(BaseMessages.CMD_LOADER_STARTUP, typeof(CmdLoaderStartup));
-            RegisterCommand(BaseMessages.CMD_LOADER_SHUTDOWN, typeof(CmdLoaderShutdown));
-            RegisterCommand(BaseMessages.CMD_SHOW_DEFALUT_SCENE, typeof(CmdShowDefaultScene));
+            RegisterCommand(BaseMessages.CMD_GAME_STARTUP, typeof(CmdLoaderStartup));
+            RegisterCommand(BaseMessages.CMD_GAME_SHUTDOWN, typeof(CmdLoaderShutdown));
             RegisterCommand(MenuMessages.CMD_MENU_STARTUP, typeof(CmdMenuStartup));
             RegisterCommand(MenuMessages.CMD_MENU_SHUTDOWN, typeof(CmdMenuShutdown));
             RegisterCommand(BzMessages.CMD_BATTLE_ZONE_STARTUP, typeof(CmdBattleZoneStartup));
@@ -90,6 +97,8 @@ namespace SampleGameNamespace
         {
             base.InitializeModel();
         }
+
+
 
 
     }

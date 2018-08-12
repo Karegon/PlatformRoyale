@@ -20,7 +20,6 @@ namespace SampleGameNamespace
 
         public MdHero() : base(NAME)
         {
-            Debug.Log(NAME + " constructor");
         }
 
         public override void OnRegister()
@@ -74,6 +73,12 @@ namespace SampleGameNamespace
                 GameObject.Destroy(collision.gameObject);
                 hero.doDamage(50);
                 Debug.Log("Pickup health");
+            }
+        
+            else if (collision.gameObject.layer == LayerMask.NameToLayer("Door"))
+            {
+                Debug.Log("Exit to next level");
+                SendNotification(BaseMessages.NOTE_SWITCH_SCENE, 2, BaseMessages.SCENE_BATTLE_ZONE);
             }
         }
 

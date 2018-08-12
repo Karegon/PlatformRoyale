@@ -27,8 +27,19 @@ namespace SampleGameNamespace
 
         public PrMenuScene() : base (NAME, null)
         {
-            Debug.Log(NAME + " started");
+            
         }
 
+        public override void OnRegister()
+        {
+            base.OnRegister();
+            Debug.Log("OnRegister " + NAME);
+        }
+
+        public override void OnRemove()
+        {
+            base.OnRemove();
+            Debug.Log("OnRemove " + NAME);
+        }
     }
 }

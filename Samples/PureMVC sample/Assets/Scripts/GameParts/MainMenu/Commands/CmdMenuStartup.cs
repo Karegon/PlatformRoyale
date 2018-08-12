@@ -14,7 +14,8 @@ namespace SampleGameNamespace
     {
         public override void Execute(INotification notification)
         {
-            Debug.Log("execute CmdMenuStartup");
+            Debug.Log("execute CmdMenuStartup " + this.ToString());
+
             Facade.RegisterProxy(new PrMenuScene());
             Facade.RegisterMediator(new MdMenuScene());
         }

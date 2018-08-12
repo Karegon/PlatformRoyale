@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using PureMVC.Interfaces;
 using PureMVC.Patterns;
@@ -51,11 +52,15 @@ namespace SampleGameNamespace
 
             set
             {
-                Debug.Log("change scene to " + value);
-                if (value != SceneManager.GetActiveScene().name)
+                Debug.Log("try to change scene to " + value);
+                Debug.Log("SceneManager.GetActiveScene().name=" + SceneManager.GetActiveScene().name);
+                if (value != _currentScene)
                 {
+                    Debug.Log("change scene to " + value);
+                    /*
                     var data = findSceneData(_currentScene);
                     if (data != null) SendNotification(data.shutdownCommand); 
+                    */
                     _currentScene = value;
 
                     //SceneManager.LoadScene(_currentScene, LoadSceneMode.Single);
@@ -66,13 +71,33 @@ namespace SampleGameNamespace
 
         public MdSceneController(object viewComponent) : base(NAME, viewComponent)
         {
+            // регистрация всех сцен игры в хандлере сцен
             sceneList = new List<SceneInitData>
             {
-                { new SceneInitData("Loader", MenuMessages.CMD_SHOW_DEFALUT_SCENE, MenuMessages.CMD_LOADER_SHUTDOWN) },
                 { new SceneInitData("MainMenu", MenuMessages.CMD_MENU_STARTUP, MenuMessages.CMD_MENU_SHUTDOWN) },
-                { new SceneInitData("Level1", BzMessages.CMD_BATTLE_ZONE_STARTUP, BzMessages.CMD_BATTLE_ZONE_SHUTDOWN) }
+                { new SceneInitData("Level1", BzMessages.CMD_BATTLE_ZONE_STARTUP, BzMessages.CMD_BATTLE_ZONE_SHUTDOWN) },
+                { new SceneInitData("Level2", BzMessages.CMD_BATTLE_ZONE_STARTUP, BzMessages.CMD_BATTLE_ZONE_SHUTDOWN) }
             };
         }
+
+        public override void OnRegister()
+        {
+            base.OnRegister();
+            Debug.Log("OnRegister " + NAME);
+            SceneManager.activeSceneChanged += onSceneChanged;
+            SceneManager.sceneLoaded += onSceneLoaded;
+            SceneManager.sceneUnloaded += onSceneUnloaded;
+        }
+
+        public override void OnRemove()
+        {
+            base.OnRemove();
+            Debug.Log("OnRemove " + NAME);
+            SceneManager.activeSceneChanged -= onSceneChanged;
+            SceneManager.sceneLoaded -= onSceneLoaded;
+            SceneManager.sceneUnloaded -= onSceneUnloaded;
+        }
+
 
         IEnumerator loadScene()
         {
@@ -84,14 +109,16 @@ namespace SampleGameNamespace
                 yield return null;
             }
             async.allowSceneActivation = true;
-            sceneLoadComplete();
+            //sceneLoadComplete();
         }
 
+        /*
         private void sceneLoadComplete()
         {
             Debug.Log("Loading complete " + _currentScene);
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(_currentScene));
         }
+        */
 
         /// <summary>
         /// Вернет данные по сцене или null, если сцена не найдена
@@ -112,51 +139,57 @@ namespace SampleGameNamespace
             return res;
         }
 
-        public override void OnRegister()
+        private void onSceneLoaded(Scene scence, LoadSceneMode mode)
         {
-            base.OnRegister();
-            Debug.Log("OnRegister " + NAME);
-            SceneManager.activeSceneChanged += SceneChanged;
-            initRoute();
+            Debug.Log("onSceneLoaded " + scence.name);
+            //Debug.Log("currentScene: " + currentScene);
+            // Проверка на активацию определенной сцены важна, так как загружаться может несколько сцен
+            if (scence.name == _currentScene)
+            {
+                Debug.Log("Setting active scene " + SceneManager.GetActiveScene().name);
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(_currentScene));
+                var data = findSceneData(_currentScene);
+                if (data != null) SendNotification(data.startupCommand);
+            }
         }
 
-        public override void OnRemove()
+        private void onSceneUnloaded(Scene scence)
         {
-            base.OnRemove();
-            Debug.Log("OnRemove " + NAME);
-            SceneManager.activeSceneChanged -= SceneChanged;
+            Debug.Log("onSceneUnloaded " + scence.name);
+            // если какая-то из сцен выгружается, необходимо выполнить команду её отключения
+            var data = findSceneData(scence.name);
+            if (data != null) SendNotification(data.shutdownCommand);
         }
 
-        protected virtual void SceneChanged(Scene current, Scene next)
+        protected virtual void onSceneChanged(Scene current, Scene next)
         {
             Debug.Log("SceneChanged " + current.name + ">" + next.name);
-            Debug.Log("Setting active scene " + SceneManager.GetActiveScene().name);
-            var data = findSceneData(next.name);
-            if (data != null) SendNotification(data.startupCommand);
         }
 
         /// <summary>
-        /// Определят, на какой сцене мы находимся и вызывает соответствующую команду инициализации
+        /// Определят, какая сцена должна отобразиться в начале игры.
+        /// Если в Юнити открыта одна из сцен, то открывается именно она
+        /// Если открыта сцена с лоадером, то приложение пойдет по стандартному сценарию, 
+        /// последовально открывая сцены, как при загрузке пользователем
         /// </summary>
-        private void initRoute()
+        private void initStartScene()
         {
-            Debug.Log("initRoute");
-            /*
-           var sceneName = SceneManager.GetActiveScene().name;
-            var data = findSceneData(sceneName);
-            if (data != null) SendNotification(data.startupCommand);
-            */
+            Debug.Log("initMainScene");
+            string startScene = SceneManager.GetActiveScene().name == "Loader" ? "MainMenu" : SceneManager.GetActiveScene().name;
+            currentScene = startScene;
         }
-
 
         /*
          * Указываем, какие нотификации хочет слушать этот медиатор
          */
         public override IList<string> ListNotificationInterests()
         {
-            IList<string> notes = new System.Collections.Generic.List<string>();
-            notes.Add(MenuMessages.NOTE_STATE_SWITCH);
-            notes.Add(BaseMessages.NOTE_SCENE_PREPARE);
+            IList<string> notes = new List<string>
+            {
+                BaseMessages.NOTE_SWITCH_SCENE,
+                BaseMessages.NOTE_SCENE_PREPARE,
+                BaseMessages.NOTE_APP_QUIT_REQUEST
+            };
             return notes;
         }
 
@@ -167,18 +200,32 @@ namespace SampleGameNamespace
         {
             switch (note.Name)
             {
-                case MenuMessages.NOTE_STATE_SWITCH:
-                    if (note.Type == MenuMessages.STATE_MAIN_MENU)
+                case MenuMessages.NOTE_SWITCH_SCENE:
+                    Debug.Log("Scene switch request: " + note.Type);
+
+                    if (note.Type == BaseMessages.SCENE_UNKNOWN)
+                    {
+                        initStartScene();
+                    }
+                    else if (note.Type == MenuMessages.SCENE_MAIN_MENU)
                     {
                         currentScene = "MainMenu";
                     }
-                    else if (note.Type == MenuMessages.STATE_BATTLE_ZONE)
+                    else if (note.Type == MenuMessages.SCENE_BATTLE_ZONE)
                     {
-                        currentScene = "Level1";
+                        var level = (int) note.Body;
+                        currentScene = "Level" + level;
                     }
                     break;
                 case BaseMessages.NOTE_SCENE_PREPARE:
-                    initRoute();
+                    initStartScene();
+                    break;
+                case BaseMessages.NOTE_APP_QUIT_REQUEST:
+                    #if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                        Application.Quit();
+                    #endif
                     break;
             }
         }

@@ -14,10 +14,7 @@ namespace SampleGameNamespace
     /// </summary>
     class CmdBattleZoneStartup : SimpleCommand
     {
-        private const string PLAYER_INPUT = "prefabs/components/PlayerInput";
-        private const string PLAYER_HUD = "prefabs/components/Hud";
-        private const string PLAYER_HERO = "prefabs/components/Hero";
-        
+       
 
         public override void Execute(INotification notification)
         {
@@ -27,17 +24,19 @@ namespace SampleGameNamespace
 
             // нужно создать на сцене необходимые игровые элементы, которые по умолчанию не создаются 
 
+            Transform canvas = Tools.FindObjectByName(MyResources.DEF_CANVAS_NAME).transform;
+
             // создадим медиатор, обслуживающий нажатые игроком клавиши
-            Tools.instantiateObject(PLAYER_INPUT);
-            Debug.Log(PLAYER_INPUT + " created");
+            Tools.instantiateObject(MyResources.PLAYER_INPUT);
+            Debug.Log(MyResources.PLAYER_INPUT + " created");
 
             // Наэкранный индикатор (HUD)
-            Tools.instantiateObject(PLAYER_HUD, Tools.FindObjectByName("Canvas").transform);
-            Debug.Log(PLAYER_HUD + " created");
+            Tools.instantiateObject(MyResources.PLAYER_HUD, canvas);
+            Debug.Log(MyResources.PLAYER_HUD + " created");
 
             // персонаж
-            Tools.instantiateObject(PLAYER_HERO);
-            Debug.Log(PLAYER_HERO + " created");
+            Tools.instantiateObject(MyResources.PLAYER_HERO);
+            Debug.Log(MyResources.PLAYER_HERO + " created");
 
             // регистрируем боевую зону и медиатор к ней
             Facade.RegisterProxy(new PrBattleZone());

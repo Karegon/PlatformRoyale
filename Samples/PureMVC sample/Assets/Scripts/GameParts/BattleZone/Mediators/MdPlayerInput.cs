@@ -22,7 +22,7 @@ namespace SampleGameNamespace
 
         public MdPlayerInput() : base(NAME)
         {
-            Debug.Log(NAME + " constructor");
+
         }
 
         public override void OnRegister()
@@ -59,6 +59,11 @@ namespace SampleGameNamespace
             if (Input.GetMouseButton(0))
             {
                 SendNotification(BzMessages.WEAPON_FIRE);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SendNotification(BzMessages.KEY_PRESSED, KeyCode.Escape);
             }
 
             /*

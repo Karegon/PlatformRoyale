@@ -11,7 +11,7 @@ namespace SampleGameNamespace
     /*
      * Медиатор формы настроек
      */ 
-    public class MdSettings : FormMediator
+    public class MdSettings : Mediator
     {
         public new const string NAME = "MdSettings";
 
@@ -23,21 +23,30 @@ namespace SampleGameNamespace
         private Toggle tglAudio;
         private Toggle tglMusic;
 
+        protected string triggerState;
+        protected string returnState;
+
         public MdSettings(object viewComponent) : base(NAME, viewComponent)
         {
+        }
+
+        // ссылка на форму 
+        public GameObject form
+        {
+            get { return m_viewComponent as GameObject; }
         }
 
         public override void OnRegister()
         {
             base.OnRegister();
 
-            triggerState = MenuMessages.STATE_SETTINGS;
-            escState = MenuMessages.STATE_MAIN_MENU;
+            
 
             btnClose = Tools.FindObjectByName("btnClose").GetComponent<Button>();
             btnClose.onClick.AddListener(() =>
-                MyGameFacade.Instance.SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, escState));
+                MyGameFacade.Instance.SendNotification(triggerState, null, returnState));
 
+            /*
             sldVolume = Tools.FindObjectByName("sldVolume").GetComponent<Slider>();
             sldVolume.value = _prScene.audioSettings.masterVolume;
             sldVolume.onValueChanged.AddListener((float value) =>
@@ -67,18 +76,59 @@ namespace SampleGameNamespace
             tglMusic.isOn = _prScene.audioSettings.isUseMusic;
             tglMusic.onValueChanged.AddListener((bool value) =>
                 MyGameFacade.Instance.SendNotification(MenuMessages.NOTE_SETTINGS_MUSIC, value));
+            */
         }
 
         public override void OnRemove()
         {
             base.OnRemove();
             btnClose.onClick.RemoveAllListeners();
+            /*
             sldVolume.onValueChanged.RemoveAllListeners();
             tglEasy.onValueChanged.RemoveAllListeners();
             tglNormal.onValueChanged.RemoveAllListeners();
             tglHard.onValueChanged.RemoveAllListeners();
             tglAudio.onValueChanged.RemoveAllListeners();
             tglHard.onValueChanged.RemoveAllListeners();
+            */
+        }
+
+        /*
+      * Указываем, какие нотификации хочет слушать этот медиатор
+      */
+        public override IList<string> ListNotificationInterests()
+        {
+            IList<string> notes = new System.Collections.Generic.List<string>();
+            notes.Add(MenuMessages.STATE_CHANGE);
+            notes.Add(BzMessages.STATE_CHANGE);
+            return notes;
+        }
+
+        /*
+         * Обрабатываем эти нотификации
+         */
+        public override void HandleNotification(INotification note)
+        {
+            switch (note.Name)
+            {
+                case MenuMessages.STATE_CHANGE:
+                    if (form != null)
+                    {
+                        form.SetActive(MenuMessages.STATE_SETTINGS == note.Type);
+                        triggerState = MenuMessages.STATE_CHANGE;
+                        returnState = MenuMessages.STATE_MENU;
+                    }
+                    break;
+                case BzMessages.STATE_CHANGE:
+                    if (form != null)
+                    {
+                        form.SetActive(BzMessages.STATE_SETTINGS == note.Type);
+                        triggerState = BzMessages.STATE_CHANGE;
+                        returnState = BzMessages.STATE_PAUSE;
+                    }
+                    break;
+
+            }
         }
 
     }

@@ -44,34 +44,42 @@ namespace SampleGameNamespace
             _prBattleZone = Facade.RetrieveProxy(PrBattleZone.NAME) as PrBattleZone;
 
             hero = Tools.FindObjectByName("Hero");
-            pauseForm = Tools.FindObjectByName("PauseForm");
-            //settingsForm = Tools.FindObjectByName("SettingsForm");
+            pauseForm = Tools.FindObjectByName("FrmPause" + "(Clone)");
+            settingsForm = Tools.FindObjectByName("SettingsForm" + "(Clone)");
 
             MdPlayerInput mdPlayerInput = UnityEngine.Object.FindObjectOfType<MdPlayerInput>();
             MdHud mdHud = UnityEngine.Object.FindObjectOfType<MdHud>();
             MdHero mdHero = UnityEngine.Object.FindObjectOfType<MdHero>();
             MdWeapon mdWeapon = UnityEngine.Object.FindObjectOfType<MdWeapon>();
 
+            Transform canvas = Tools.FindObjectByName(MyResources.DEF_CANVAS_NAME).transform;
+            // меню паузы
+            pauseForm = Tools.instantiateObject(MyResources.FROM_PAUSE, canvas);
+            pauseForm.SetActive(false);
+            Debug.Log(MyResources.FROM_PAUSE + " created");
+
+            // меню настроек
+            settingsForm = Tools.instantiateObject(MyResources.FROM_SETTINGS, canvas);
+            settingsForm.SetActive(false);
+            Debug.Log(MyResources.FROM_SETTINGS + " created");
+
+
             //_prGame.sceneStart();
-            // Facade.RegisterMediator(new MdHud(hud));
             Facade.RegisterMediator(new MdPause(pauseForm));
-            //Facade.RegisterMediator(new MdSettings(settingsForm));
+            Facade.RegisterMediator(new MdSettings(settingsForm));
             Facade.RegisterMediator(new MdSound());
             Facade.RegisterMediator(mdPlayerInput);
             Facade.RegisterMediator(mdHud);
             Facade.RegisterMediator(mdHero);
             Facade.RegisterMediator(mdWeapon);
-
-            // запускаем игру
-            //SendNotification(BzMessages.BZ_CMD_INIT);
         }
 
         public override void OnRemove()
         {
             base.OnRemove();
             Debug.Log("OnRemove " + NAME);
-            // Facade.RemoveMediator(MdSettings.NAME);
             Facade.RemoveMediator(MdPause.NAME);
+            Facade.RemoveMediator(MdSettings.NAME);
             Facade.RemoveMediator(MdSound.NAME);
             Facade.RemoveMediator(MdPlayerInput.NAME);
             Facade.RemoveMediator(MdHud.NAME);
@@ -96,9 +104,14 @@ namespace SampleGameNamespace
                     _prBattleZone.setStateByMessage(note.Type);
                     break;
                 case BzMessages.STATE_WAS_CHANGED:
+                    if ((ZoneState)(int)note.Body == ZoneState.zsEnd)
+                    {
+                        Debug.Log(note.Type);
+                        SendNotification(BaseMessages.NOTE_SWITCH_SCENE, null, BaseMessages.SCENE_MAIN_MENU);
+                    }
                     break;
                 case BzMessages.AVATAR_DEAD:
-                    SendNotification(MenuMessages.NOTE_STATE_SWITCH, null, MenuMessages.STATE_MAIN_MENU);
+                    SendNotification(BaseMessages.NOTE_SWITCH_SCENE, null, BaseMessages.SCENE_MAIN_MENU);
                     break;
 
 

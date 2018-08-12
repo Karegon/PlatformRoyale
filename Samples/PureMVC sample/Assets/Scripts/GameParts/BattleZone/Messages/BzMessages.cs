@@ -16,9 +16,11 @@ namespace SampleGameNamespace
         // идет инициализация
         public const string STATE_INIT = APP_PREFIX + "bz/state/init";
         // идет игра
-        public const string STATE_IN_PROGRESS = APP_PREFIX + "bz/state/inPrigress";
+        public const string STATE_IN_PROGRESS = APP_PREFIX + "bz/state/inProgress";
         // игра остановлена
         public const string STATE_PAUSE = APP_PREFIX + "bz/state/pause";
+        // Изменяются настройки
+        public const string STATE_SETTINGS = APP_PREFIX + "bz/state/settings";
         // игра окончена
         public const string STATE_END = APP_PREFIX + "bz/state/end";
 
@@ -26,6 +28,9 @@ namespace SampleGameNamespace
         public const string STATE_CHANGE = APP_PREFIX + "bz/note/changeState";
         // состояние игровой зоны было изменено. Типом передается установившееся состояние
         public const string STATE_WAS_CHANGED = APP_PREFIX + "bz/note/stateWasChanged";
+
+        // Нажата клавиша. Вторым параметром код клавиши
+        public const string KEY_PRESSED = APP_PREFIX + "bz/note/keyPressed";
 
         // здоровье игрока изменилось
         public const string HEALTH_CHANGED = APP_PREFIX + "bz/note/healthWasChanged";

@@ -17,18 +17,27 @@ namespace SampleGameNamespace
     {
         public const string APP_PREFIX = "MyGame/";
         // запусить лоадер
-        public const string CMD_LOADER_STARTUP = APP_PREFIX + "note/loader/startUp";
+        public const string CMD_GAME_STARTUP = APP_PREFIX + "note/game/startup";
         // погасить лоадер (и игру, видимо)
-        public const string CMD_LOADER_SHUTDOWN = APP_PREFIX + "note/loader/shutdown";
-        // показать стандартную сцену игры (запускается после лоадера)
-        public const string CMD_SHOW_DEFALUT_SCENE = APP_PREFIX + "note/showDefaultScene";
+        public const string CMD_GAME_SHUTDOWN = APP_PREFIX + "note/game/shutdown";
 
         // сообщение для контроллера сцены о переключени на другую сцену
         public const string NOTE_SCENE_PREPARE = APP_PREFIX + "note/scenePrepare";
         // сообщение о том, что контроллер сцены загрузил сцену
         public const string NOTE_SCENE_LOADED = APP_PREFIX + "note/SceneLoaded";
 
+        // сообщение о том, что приложение закрывается
+        // сообщение приходит, перед тем, как будет выключен медиатор всех сцен
+        public const string NOTE_APP_QUIT = APP_PREFIX + "note/appQuit";
+        // Запрос от пользователя на закрытие приложения 
+        public const string NOTE_APP_QUIT_REQUEST = APP_PREFIX + "note/appQuitRequest";
 
-
+        // переключение между состояниями приложения, третьим аргументом идет SCENE_UNKNOWN
+        // по факту это ключевые экраны приложения
+        public const string NOTE_SWITCH_SCENE = APP_PREFIX + "note/switchScene";
+        // сцены игры
+        public const string SCENE_UNKNOWN = APP_PREFIX + "scene/unknown";
+        public const string SCENE_MAIN_MENU = APP_PREFIX + "scene/mainmenu";
+        public const string SCENE_BATTLE_ZONE = APP_PREFIX + "scene/battleZone";
     }
 }

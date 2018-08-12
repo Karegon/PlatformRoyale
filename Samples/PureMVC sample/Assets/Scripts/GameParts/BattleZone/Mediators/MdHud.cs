@@ -25,7 +25,7 @@ namespace SampleGameNamespace
 
         public MdHud() : base(NAME)
         {
-            Debug.Log(NAME + " constructor");
+
         }
 
         public override void OnRegister()

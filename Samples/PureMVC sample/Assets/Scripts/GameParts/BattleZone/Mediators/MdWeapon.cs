@@ -22,7 +22,6 @@ namespace SampleGameNamespace
 
         public MdWeapon() : base(NAME)
         {
-            Debug.Log(NAME + " constructor");
         } 
 
         public override void OnRegister()

@@ -51,7 +51,7 @@ namespace PureMVC.Unity
         /// </summary>
         protected virtual void resumeBootstrap()
         {
-            Debug.Log("resumeBootstrap");
+            Debug.Log("resumeBootstrap on scene " + gameObject.scene.name);
         }
 
         /// <summary>                                                                                                   
@@ -60,7 +60,7 @@ namespace PureMVC.Unity
         /// </summary>
         protected virtual void initNewBootstrap()
         {
-            Debug.Log("initNewBootstrap");
+            Debug.Log("initNewBootstrap on scene " + gameObject.scene.name);
             DontDestroyOnLoad(gameObject);
         }
 

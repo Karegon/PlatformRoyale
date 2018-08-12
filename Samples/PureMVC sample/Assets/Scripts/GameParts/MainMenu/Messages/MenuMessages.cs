@@ -11,20 +11,9 @@ namespace SampleGameNamespace
     {
         public const string CMD_MENU_STARTUP = APP_PREFIX + "note/startUp";
         public const string CMD_MENU_SHUTDOWN = APP_PREFIX + "note/shutdown";
-
-        // состояния игры
-        public const string STATE_UNKNOWN = APP_PREFIX + "state/unknown";
-        public const string STATE_MAIN_MENU = APP_PREFIX + "state/mainmenu";
-        public const string STATE_BATTLE_ZONE = APP_PREFIX + "state/battleZone";
-        public const string STATE_SETTINGS = APP_PREFIX + "state/settings";
-        public const string STATE_QUIT = APP_PREFIX + "state/quit";
-
        
         // Нажата клавиша. Телом - код клавиши
-        public const string NOTE_KEY_PRESSED = APP_PREFIX + "note/keyPressed";
-
-        // изменение состояния, третьим аргументом идет STATE_UNKNOWN
-        public const string NOTE_STATE_SWITCH = APP_PREFIX + "note/stateSwitch";
+        //public const string NOTE_KEY_PRESSED = APP_PREFIX + "note/keyPressed";
 
         // громкость, вторым аргументом float
         public const string NOTE_SETTINGS_VOLUME = APP_PREFIX + "note/settings/volume";
@@ -34,8 +23,25 @@ namespace SampleGameNamespace
         public const string NOTE_SETTINGS_MUSIC = APP_PREFIX + "note/settings/music";
         // уровень сложности, вторым аргументом идет bool
         public const string NOTE_SETTINGS_LEVEL = APP_PREFIX + "note/settings/level";
-        
-      
+
+
+
+        // Состояния главного меню
+        // не инициализировано
+        public const string STATE_UNKNOWN = APP_PREFIX + "mm/state/unknown";
+        // идет инициализация
+        public const string STATE_INIT = APP_PREFIX + "mm/state/init";
+        // главное меню
+        public const string STATE_MENU = APP_PREFIX + "mm/state/menu";
+        // меню настроек
+        public const string STATE_SETTINGS = APP_PREFIX + "mm/state/settings";
+
+
+        // Изменить состояние меню. Типом передается новое состояние
+        public const string STATE_CHANGE = APP_PREFIX + "mm/note/changeState";
+        // состояние было изменено. Типом передается установившееся состояние
+        public const string STATE_WAS_CHANGED = APP_PREFIX + "mm/note/stateWasChanged";
+
     }
 
 }

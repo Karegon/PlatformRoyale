@@ -22,7 +22,7 @@ namespace SampleGameNamespace
 
         public MdSound() : base(NAME)
         {
-            Debug.Log("MdSound constructor");
+
         }
 
         public override void OnRegister()
